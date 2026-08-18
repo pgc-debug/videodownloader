@@ -21,7 +21,8 @@ def fetch_video():
     if not data or 'url' not in data:
         return jsonify({"error": "No URL provided"}), 400
 
-    target_url = data['url']
+    url = "https://rapidapi.com"
+
     
     # RapidAPI standard endpoint configuration
     url = f"https://{RAPIDAPI_HOST}/api/v1/downloader"
