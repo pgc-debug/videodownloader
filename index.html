@@ -3,149 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YTDown - YouTube Video Downloader</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
-    </style>
+    <title>YTDown - Free Video Downloader</title>
+    <!-- Tailwind CSS for rich modern layout -->
+    <script src="https://jsdelivr.net"></script>
 </head>
-<body class="flex flex-col min-h-screen items-center justify-between p-4">
-    
-    <!-- Navbar -->
-    <header class="w-full max-w-4xl flex justify-between items-center py-4 border-b border-slate-800">
-        <h1 class="text-2xl font-bold text-red-500 flex items-center gap-1">
-            <span>🔴</span> YTDown
-        </h1>
-        <span class="text-sm text-slate-400">Free Video Downloader</span>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between font-sans">
+
+    <!-- Header Section -->
+    <header class="max-w-6xl w-full mx-auto px-4 py-6 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="w-4 h-4 bg-red-600 rounded-full animate-pulse"></div>
+            <h1 class="text-2xl font-bold tracking-tight text-white">YTDown</h1>
+        </div>
+        <span class="text-xs text-slate-400 font-medium tracking-wide uppercase bg-slate-800 px-2.5 py-1 rounded-full border border-slate-700">Free Video Downloader</span>
     </header>
 
     <!-- Main Container -->
-    <main class="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl my-auto">
-        <div class="text-center mb-6">
-            <h2 class="text-3xl font-extrabold mb-2">Download YouTube Videos</h2>
-            <p class="text-slate-400">Convert and download YouTube videos in MP4 or MP3 high quality formats instantly.</p>
-        </div>
-
-        <!-- Input Box -->
-        <div class="flex flex-col sm:flex-row gap-2 mb-6">
-            <input id="videoUrl" type="text" placeholder="Paste YouTube video link here..." 
-                class="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-red-500 text-white placeholder-slate-500">
-            <button id="fetchBtn" onclick="fetchVideo()" 
-                class="bg-red-600 hover:bg-red-700 transition px-6 py-3 font-bold rounded-xl text-white">
-                Fetch Links
-            </button>
-        </div>
-
-        <!-- Loading State -->
-        <div id="loader" class="hidden text-center py-6">
-            <div class="animate-spin inline-block w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full mb-2"></div>
-            <p class="text-slate-400">Processing video formats... Please wait.</p>
-        </div>
-
-        <!-- Error State -->
-        <div id="errorBox" class="hidden bg-red-900/50 border border-red-500 text-red-200 p-4 rounded-xl mb-6 text-center"></div>
-
-        <!-- Result Box -->
-        <div id="resultBox" class="hidden space-y-6">
-            <div class="flex flex-col md:flex-row gap-4 border-b border-slate-800 pb-4">
-                <img id="videoThumb" src="" alt="Thumbnail" class="w-full md:w-48 h-auto object-cover rounded-xl border border-slate-700">
-                <div>
-                    <h3 id="videoTitle" class="text-lg font-bold leading-snug"></h3>
-                    <p id="videoDuration" class="text-sm text-slate-400 mt-1"></p>
-                </div>
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+        <div class="max-w-2xl w-full bg-slate-800/50 backdrop-blur-md p-8 rounded-2xl border border-slate-700/60 shadow-2xl shadow-black/40">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-extrabold text-white tracking-tight mb-2">Download YouTube Videos</h2>
+                <p class="text-slate-400 text-sm">Convert and download YouTube videos in MP4 or MP3 high quality formats instantly.</p>
             </div>
 
-            <!-- Formats List -->
-            <div>
-                <h4 class="text-md font-bold mb-3 text-slate-300">Available Formats:</h4>
-                <div id="formatsList" class="max-h-60 overflow-y-auto space-y-2 pr-2">
-                    <!-- Dynamic Rows Go Here -->
+            <!-- Input Form Box -->
+            <div class="flex flex-col sm:flex-row gap-3 bg-slate-900 p-2 rounded-xl border border-slate-700 shadow-inner">
+                <input type="text" id="videoUrl" placeholder="Paste YouTube video link here..." 
+                    class="flex-grow bg-transparent px-4 py-3 text-white outline-none placeholder-slate-500 text-sm w-full">
+                <button id="fetchBtn" onclick="fetchVideo()" 
+                    class="bg-red-600 hover:bg-red-500 text-white font-semibold px-6 py-3 rounded-lg transition active:scale-95 duration-150 cursor-pointer shadow-lg shadow-red-900/30 whitespace-nowrap">
+                    Fetch Links
+                </button>
+            </div>
+
+            <!-- Loader Indicator -->
+            <div id="loader" class="hidden flex flex-col items-center justify-center my-10 gap-3">
+                <div class="w-10 h-10 border-4 border-red-600/30 border-t-red-600 rounded-full animate-spin"></div>
+                <p class="text-slate-400 text-xs tracking-wider animate-pulse">Fetching available formats from Render...</p>
+            </div>
+
+            <!-- Error Notification Alert Box -->
+            <div id="errorBox" class="hidden mt-6 bg-red-900/20 border border-red-500/30 text-red-400 p-4 rounded-xl text-center text-sm">
+                <span id="errorMessage">An unexpected network error occurred.</span>
+            </div>
+
+            <!-- Video Downloader Target Results Card -->
+            <div id="resultBox" class="hidden mt-8 border-t border-slate-700/60 pt-6 animate-fadeIn">
+                <div class="flex flex-col md:flex-row gap-5 items-center md:items-start bg-slate-900/40 p-4 rounded-xl border border-slate-700/40 mb-6">
+                    <img id="videoThumbnail" src="" alt="Thumbnail" class="w-full md:w-44 aspect-video object-cover rounded-lg shadow-md border border-slate-700">
+                    <div class="text-center md:text-left flex-grow">
+                        <h3 id="videoTitle" class="text-base font-bold text-white leading-snug line-clamp-2">Video Title Loading...</h3>
+                        <p id="videoDuration" class="text-xs text-slate-400 font-medium mt-2 bg-slate-800 inline-block px-2 py-0.5 rounded border border-slate-700">Duration: 00:00</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-1">Available Download Formats</h4>
+                    <ul id="formatsList" class="grid gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+                        <!-- Dynamic list items injector target -->
+                    </ul>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="w-full max-w-4xl text-center py-4 border-t border-slate-800 text-xs text-slate-500">
+    <!-- Footer Section -->
+    <footer class="w-full max-w-6xl mx-auto text-center py-6 border-t border-slate-800/80 text-xs text-slate-500 tracking-wide">
         &copy; 2026 YTDown Clone. For educational purposes only.
     </footer>
 
+    <!-- Core Controller Communications Script Engine -->
     <script>
-    // Aapka live Render URL bina kisi aakhri slash ke
-    const BACKEND_URL = "https://flashvid.onrender.com";
+        const BACKEND_URL = "https://onrender.com";
 
-    async function fetchVideo() {
-        const url = document.getElementById('videoUrl').value.trim();
-        const fetchBtn = document.getElementById('fetchBtn');
-        const loader = document.getElementById('loader');
-        const resultBox = document.getElementById('resultBox');
-        const errorBox = document.getElementById('errorBox');
+        async function fetchVideo() {
+            const url = document.getElementById('videoUrl').value.trim();
+            const fetchBtn = document.getElementById('fetchBtn');
+            const loader = document.getElementById('loader');
+            const resultBox = document.getElementById('resultBox');
+            const errorBox = document.getElementById('errorBox');
 
-        if (!url) {
-            alert("Please paste a valid YouTube URL first!");
-            return;
-        }
-
-        // Setup UI for loading state
-        errorBox.classList.add('hidden');
-        resultBox.classList.add('hidden');
-        loader.classList.remove('hidden');
-        fetchBtn.disabled = true;
-
-        try {
-            // Hamara backend custom endpoint use karta hai, isiliye direct /api/fetch format lazmi hai
-            const response = await fetch(`${BACKEND_URL}/api/fetch`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ url: url })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok || data.error) {
-                throw new Error(data.error || `Server responded with status ${response.status}`);
+            if (!url) {
+                alert("Please paste a valid YouTube link first!");
+                return;
             }
 
-            // Render Card Data
-            document.getElementById('videoTitle').innerText = data.title;
-            document.getElementById('videoThumbnail').src = data.thumbnail;
-            document.getElementById('videoDuration').innerText = `Duration: ${data.duration}`;
+            // UI Reset & Set Loading States
+            errorBox.classList.add('hidden');
+            resultBox.classList.add('hidden');
+            loader.classList.remove('hidden');
+            fetchBtn.disabled = true;
 
-            // Populate Download Formats
-            const formatsList = document.getElementById('formatsList');
-            formatsList.innerHTML = '';
+            try {
+                // Post network dynamic handshake dispatch payload to server destination
+                const response = await fetch(`${BACKEND_URL}/api/fetch`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                });
 
-            data.formats.forEach(fmt => {
-                const li = document.createElement('li');
-                li.className = "flex justify-between items-center bg-slate-700 p-3 rounded-lg border border-slate-600";
-                li.innerHTML = `
-                    <div>
-                        <span class="font-semibold text-white">${fmt.quality}</span>
-                        <span class="text-xs text-slate-400 block">${fmt.ext.toUpperCase()} ${fmt.filesize ? '• ' + fmt.filesize : ''}</span>
-                    </div>
-                    <a href="${fmt.url}" target="_blank" rel="noopener noreferrer" class="bg-green-600 hover:bg-green-500 text-white font-medium px-4 py-1.5 rounded transition text-sm">
-                        Download
-                    </a>
-                `;
-                formatsList.appendChild(li);
-            });
+                const data = await response.json();
 
-            // Show Results
-            resultBox.classList.remove('hidden');
+                if (!response.ok || data.error) {
+                    throw new Error(data.error || `Server responded with status status code ${response.status}`);
+                }
 
-        } catch (error) {
-            console.error("Error fetching video:", error);
-            document.getElementById('errorMessage').innerText = error.message || "An unexpected network error occurred.";
-            errorBox.classList.remove('hidden');
-        } finally {
-            loader.classList.add('hidden');
-            fetchBtn.disabled = false;
+                // Render matching layout elements correctly securely mapping data parameters
+                document.getElementById('videoTitle').innerText = data.title;
+                document.getElementById('videoThumbnail').src = data.thumbnail;
+                document.getElementById('videoDuration').innerText = data.duration;
+
+                const formatsList = document.getElementById('formatsList');
+                formatsList.innerHTML = '';
+
+                if (!data.formats || data.formats.length === 0) {
+                    throw new Error("No download links found for this video configuration.");
+                }
+
+                // Append available verified links securely parsed mapping formats array iterations
+                data.formats.forEach(fmt => {
+                    const li = document.createElement('li');
+                    li.className = "flex justify-between items-center bg-slate-800/60 hover:bg-slate-800 px-4 py-3 rounded-xl border border-slate-700/50 transition duration-150";
+                    li.innerHTML = `
+                        <div class="flex flex-col">
+                            <span class="font-bold text-sm text-white">${fmt.quality}</span>
+                            <span class="text-[11px] text-slate-400 font-medium uppercase mt-0.5 tracking-wider">${fmt.ext} &bull; ${fmt.filesize}</span>
+                        </div>
+                        <a href="${fmt.url}" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-md shadow-emerald-950/20 transition active:scale-95 duration-100 whitespace-nowrap">
+                            Download
+                        </a>
+                    `;
+                    formatsList.appendChild(li);
+                });
+
+                resultBox.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Critical Runtime Intercept:", error);
+                document.getElementById('errorMessage').innerText = error.message || "An unexpected communication error occurred.";
+                errorBox.classList.remove('hidden');
+            } finally {
+                loader.classList.add('hidden');
+                fetchBtn.disabled = false;
+            }
         }
-    }
-</script>
-
-   
+    </script>
 </body>
 </html>
