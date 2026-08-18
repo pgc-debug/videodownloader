@@ -4,77 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YTDown - Free Video Downloader</title>
-    <!-- Tailwind CSS for rich modern layout -->
-    <script src="https://tailwindcss.com"></script>
+    <!-- Bootstrap CSS - 100% guaranteed layout engine load -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; min-h: 100vh; }
+        .card-custom { background-color: #1e293b; border: 1px solid #334155; border-radius: 1rem; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3); }
+        .input-box { background-color: #0f172a; border: 1px solid #475569; color: white; border-radius: 0.5rem; }
+        .input-box:focus { background-color: #0f172a; color: white; border-color: #dc3545; box-shadow: none; }
+        .format-item { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; margin-bottom: 0.5rem; padding: 0.75rem 1rem; display: flex; justify-content: space-between; items-center: center; }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between font-sans">
+<body class="d-flex flex-col justify-content-between min-vh-100 py-4">
 
-    <!-- Header Section -->
-    <header class="max-w-6xl w-full mx-auto px-4 py-6 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <div class="w-4 h-4 bg-red-600 rounded-full animate-pulse"></div>
-            <h1 class="text-2xl font-bold tracking-tight text-white">YTDown</h1>
-        </div>
-        <span class="text-xs text-slate-400 font-medium tracking-wide uppercase bg-slate-800 px-2.5 py-1 rounded-full border border-slate-700">Free Video Downloader</span>
-    </header>
+    <div class="container max-w-md my-auto">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+                
+                <!-- Logo -->
+                <div class="text-center mb-4">
+                    <h1 class="fw-bold text-danger display-5 m-0">YTDown</h1>
+                    <small class="text-muted text-uppercase tracking-wider">Free Multi-Video Downloader</small>
+                </div>
 
-    <!-- Main Container -->
-    <main class="flex-grow flex items-center justify-center px-4 py-12">
-        <div class="max-w-2xl w-full bg-slate-800/50 backdrop-blur-md p-8 rounded-2xl border border-slate-700/60 shadow-2xl shadow-black/40">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-extrabold text-white tracking-tight mb-2">Download YouTube Videos</h2>
-                <p class="text-slate-400 text-sm">Convert and download YouTube videos in MP4 or MP3 high quality formats instantly.</p>
-            </div>
-
-            <!-- Input Form Box -->
-            <div class="flex flex-col sm:flex-row gap-3 bg-slate-900 p-2 rounded-xl border border-slate-700 shadow-inner">
-                <input type="text" id="videoUrl" placeholder="Paste YouTube video link here..." 
-                    class="flex-grow bg-transparent px-4 py-3 text-white outline-none placeholder-slate-500 text-sm w-full">
-                <button id="fetchBtn" onclick="fetchVideo()" 
-                    class="bg-red-600 hover:bg-red-500 text-white font-semibold px-6 py-3 rounded-lg transition active:scale-95 duration-150 cursor-pointer shadow-lg shadow-red-900/30 whitespace-nowrap">
-                    Fetch Links
-                </button>
-            </div>
-
-            <!-- Loader Indicator -->
-            <div id="loader" class="hidden flex flex-col items-center justify-center my-10 gap-3">
-                <div class="w-10 h-10 border-4 border-red-600/30 border-t-red-600 rounded-full animate-spin"></div>
-                <p class="text-slate-400 text-xs tracking-wider animate-pulse">Fetching available formats from Render...</p>
-            </div>
-
-            <!-- Error Notification Alert Box -->
-            <div id="errorBox" class="hidden mt-6 bg-red-900/20 border border-red-500/30 text-red-400 p-4 rounded-xl text-center text-sm">
-                <span id="errorMessage">An unexpected network error occurred.</span>
-            </div>
-
-            <!-- Video Downloader Target Results Card -->
-            <div id="resultBox" class="hidden mt-8 border-t border-slate-700/60 pt-6 animate-fadeIn">
-                <div class="flex flex-col md:flex-row gap-5 items-center md:items-start bg-slate-900/40 p-4 rounded-xl border border-slate-700/40 mb-6">
-                    <img id="videoThumbnail" src="" alt="Thumbnail" class="w-full md:w-44 aspect-video object-cover rounded-lg shadow-md border border-slate-700">
-                    <div class="text-center md:text-left flex-grow">
-                        <h3 id="videoTitle" class="text-base font-bold text-white leading-snug line-clamp-2">Video Title Loading...</h3>
-                        <p id="videoDuration" class="text-xs text-slate-400 font-medium mt-2 bg-slate-800 inline-block px-2 py-0.5 rounded border border-slate-700">Duration: 00:00</p>
+                <!-- Core Card -->
+                <div class="card-custom p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-extrabold text-white h4 mb-2">Download Videos Instantly</h2>
+                        <p class="text-muted small">Paste links from YouTube, TikTok, or Instagram to fetch high-quality download mirrors.</p>
                     </div>
+
+                    <!-- Input Core -->
+                    <div class="input-group mb-3">
+                        <input type="text" id="videoUrl" class="form-control input-box py-2.5 text-sm" placeholder="Paste media URL here...">
+                        <button id="fetchBtn" onclick="fetchVideo()" class="btn btn-danger fw-bold px-4">Fetch Links</button>
+                    </div>
+
+                    <!-- Loader status spinner element -->
+                    <div id="loader" class="d-none text-center my-4">
+                        <div class="spinner-border text-danger mb-2" role="status"></div>
+                        <p class="text-muted small animate-pulse">Extracting streams from active servers...</p>
+                    </div>
+
+                    <!-- Error Alert block placeholder -->
+                    <div id="errorBox" class="d-none alert alert-danger bg-danger bg-opacity-10 text-danger border-danger border-opacity-20 text-center text-sm py-2.5" role="alert">
+                        <span id="errorMessage">An unexpected transmission boundary condition error occurred.</span>
+                    </div>
+
+                    <!-- Results Output Target Block Template Layout -->
+                    <div id="resultBox" class="d-none mt-4 pt-3 border-top border-secondary border-opacity-20">
+                        <div class="d-flex flex-column flex-sm-row gap-3 bg-black bg-opacity-20 p-3 rounded mb-3 align-items-center">
+                            <img id="videoThumbnail" src="" alt="Thumbnail" class="img-fluid rounded border border-secondary border-opacity-30" style="max-width: 130px; aspect-ratio: 16/9; object-fit: cover;">
+                            <div class="text-center text-sm-start flex-grow-1">
+                                <h3 id="videoTitle" class="h6 text-white fw-bold mb-1 text-truncate" style="max-width: 250px;">Loading Media Title...</h3>
+                                <span id="videoDuration" class="badge bg-secondary text-white-50">00:00</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <h4 class="text-muted small fw-bold text-uppercase mb-2">Available Links</h4>
+                            <div id="formatsList" style="max-height: 200px; overflow-y: auto; padding-right: 2px;">
+                                <!-- Dynamic formats rows map injection target -->
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="space-y-3">
-                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-1">Available Download Formats</h4>
-                    <ul id="formatsList" class="grid gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
-                        <!-- Dynamic list items injector target -->
-                    </ul>
-                </div>
+                <!-- Footer element copyright brand -->
+                <p class="text-center text-muted small mt-4 pt-3 border-top border-secondary border-opacity-10">&copy; 2026 YTDown Project Clone.</p>
+
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- Footer Section -->
-    <footer class="w-full max-w-6xl mx-auto text-center py-6 border-t border-slate-800/80 text-xs text-slate-500 tracking-wide">
-        &copy; 2026 YTDown Clone. For educational purposes only.
-    </footer>
-
-    <!-- Core Controller Communications Script Engine -->
+    <!-- Communication Pipeline Execution Logic Script Core Block -->
     <script>
-        const BACKEND_URL = "https://videodownloader-j65t.onrender.com";
+        // Sahi Render Base Node Destination Target Link
+        const BACKEND_URL = "https://onrender.com";
 
         async function fetchVideo() {
             const url = document.getElementById('videoUrl').value.trim();
@@ -84,68 +90,58 @@
             const errorBox = document.getElementById('errorBox');
 
             if (!url) {
-                alert("Please paste a valid YouTube link first!");
+                alert("Please paste a valid video URL destination first!");
                 return;
             }
 
-            // UI Reset & Set Loading States
-            errorBox.classList.add('hidden');
-            resultBox.classList.add('hidden');
-            loader.classList.remove('hidden');
+            errorBox.classList.add('d-none');
+            resultBox.classList.add('d-none');
+            loader.classList.remove('d-none');
             fetchBtn.disabled = true;
 
             try {
-                // Post network dynamic handshake dispatch payload to server destination
                 const response = await fetch(`${BACKEND_URL}/api/fetch`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url: url })
                 });
 
                 const data = await response.json();
 
                 if (!response.ok || data.error) {
-                    throw new Error(data.error || `Server responded with status status code ${response.status}`);
+                    throw new Error(data.error || `Remote server rejected handling with status ${response.status}`);
                 }
 
-                // Render matching layout elements correctly securely mapping data parameters
                 document.getElementById('videoTitle').innerText = data.title;
                 document.getElementById('videoThumbnail').src = data.thumbnail;
-                document.getElementById('videoDuration').innerText = data.duration;
+                document.getElementById('videoDuration').innerText = `Duration: ${data.duration}`;
 
                 const formatsList = document.getElementById('formatsList');
                 formatsList.innerHTML = '';
 
-                if (!data.formats || data.formats.length === 0) {
-                    throw new Error("No download links found for this video configuration.");
-                }
-
-                // Append available verified links securely parsed mapping formats array iterations
                 data.formats.forEach(fmt => {
-                    const li = document.createElement('li');
-                    li.className = "flex justify-between items-center bg-slate-800/60 hover:bg-slate-800 px-4 py-3 rounded-xl border border-slate-700/50 transition duration-150";
-                    li.innerHTML = `
-                        <div class="flex flex-col">
-                            <span class="font-bold text-sm text-white">${fmt.quality}</span>
-                            <span class="text-[11px] text-slate-400 font-medium uppercase mt-0.5 tracking-wider">${fmt.ext} &bull; ${fmt.filesize}</span>
+                    const row = document.createElement('div');
+                    row.className = "format-item";
+                    row.innerHTML = `
+                        <div class="d-flex flex-column text-start">
+                            <span class="fw-bold text-white small">${fmt.quality}</span>
+                            <span class="text-muted" style="font-size: 10px; text-transform: uppercase;">${fmt.ext} &bull; ${fmt.filesize}</span>
                         </div>
-                        <a href="${fmt.url}" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-md shadow-emerald-950/20 transition active:scale-95 duration-100 whitespace-nowrap">
+                        <a href="${fmt.url}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm fw-bold px-3 py-1">
                             Download
                         </a>
                     `;
-                    formatsList.appendChild(li);
+                    formatsList.appendChild(row);
                 });
 
-                resultBox.classList.remove('hidden');
+                resultBox.classList.remove('d-none');
 
             } catch (error) {
-                console.error("Critical Runtime Intercept:", error);
-                document.getElementById('errorMessage').innerText = error.message || "An unexpected communication error occurred.";
-                errorBox.classList.remove('hidden');
+                console.error("Pipeline Boundary Exception caught:", error);
+                document.getElementById('errorMessage').innerText = error.message || "Communication proxy timeout occurred.";
+                errorBox.classList.remove('d-none');
             } finally {
-                loader.classList.add('hidden');
+                loader.classList.add('d-none');
                 fetchBtn.disabled = false;
             }
         }
