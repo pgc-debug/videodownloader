@@ -3,34 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YTDown - Free Video Downloader</title>
-    <!-- Bootstrap CSS - 100% guaranteed layout engine load -->
+    <title>YTDown - Premium Video Downloader</title>
+    <!-- Bootstrap CSS for layout guarantees -->
     <link href="https://jsdelivr.net" rel="stylesheet">
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; min-h: 100vh; }
+        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; min-height: 100vh; }
         .card-custom { background-color: #1e293b; border: 1px solid #334155; border-radius: 1rem; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3); }
         .input-box { background-color: #0f172a; border: 1px solid #475569; color: white; border-radius: 0.5rem; }
         .input-box:focus { background-color: #0f172a; color: white; border-color: #dc3545; box-shadow: none; }
-        .format-item { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; margin-bottom: 0.5rem; padding: 0.75rem 1rem; display: flex; justify-content: space-between; items-center: center; }
+        .format-item { background-color: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; margin-bottom: 0.5rem; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
-<body class="d-flex flex-col justify-content-between min-vh-100 py-4">
+<body class="d-flex flex-column justify-content-between min-vh-100 py-4">
 
-    <div class="container max-w-md my-auto">
+    <div class="container my-auto">
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-7">
+            <div class="col-md-8 col-lg-6">
                 
                 <!-- Logo -->
                 <div class="text-center mb-4">
                     <h1 class="fw-bold text-danger display-5 m-0">YTDown</h1>
-                    <small class="text-muted text-uppercase tracking-wider">Free Multi-Video Downloader</small>
+                    <small class="text-muted text-uppercase tracking-wider">Universal Video Downloader Engine</small>
                 </div>
 
                 <!-- Core Card -->
                 <div class="card-custom p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <h2 class="fw-extrabold text-white h4 mb-2">Download Videos Instantly</h2>
-                        <p class="text-muted small">Paste links from YouTube, TikTok, or Instagram to fetch high-quality download mirrors.</p>
+                        <h2 class="fw-extrabold text-white h4 mb-2">Download Media Instantly</h2>
+                        <p class="text-muted small">Paste links from YouTube, TikTok, or Instagram to generate high-speed download mirrors.</p>
                     </div>
 
                     <!-- Input Core -->
@@ -39,10 +39,10 @@
                         <button id="fetchBtn" onclick="fetchVideo()" class="btn btn-danger fw-bold px-4">Fetch Links</button>
                     </div>
 
-                    <!-- Loader status spinner element -->
+                    <!-- Loader Status Element -->
                     <div id="loader" class="d-none text-center my-4">
                         <div class="spinner-border text-danger mb-2" role="status"></div>
-                        <p class="text-muted small animate-pulse">Extracting streams from active servers...</p>
+                        <p class="text-muted small">Connecting bypass stream rails...</p>
                     </div>
 
                     <!-- Error Alert block placeholder -->
@@ -50,19 +50,19 @@
                         <span id="errorMessage">An unexpected transmission boundary condition error occurred.</span>
                     </div>
 
-                    <!-- Results Output Target Block Template Layout -->
+                    <!-- Results Output Target Block -->
                     <div id="resultBox" class="d-none mt-4 pt-3 border-top border-secondary border-opacity-20">
                         <div class="d-flex flex-column flex-sm-row gap-3 bg-black bg-opacity-20 p-3 rounded mb-3 align-items-center">
-                            <img id="videoThumbnail" src="" alt="Thumbnail" class="img-fluid rounded border border-secondary border-opacity-30" style="max-width: 130px; aspect-ratio: 16/9; object-fit: cover;">
+                            <img id="videoThumbnail" src="https://placehold.co" alt="Thumbnail" class="img-fluid rounded border border-secondary border-opacity-30" style="max-width: 120px; aspect-ratio: 16/9; object-fit: cover;">
                             <div class="text-center text-sm-start flex-grow-1">
-                                <h3 id="videoTitle" class="h6 text-white fw-bold mb-1 text-truncate" style="max-width: 250px;">Loading Media Title...</h3>
-                                <span id="videoDuration" class="badge bg-secondary text-white-50">00:00</span>
+                                <h3 class="h6 text-white fw-bold mb-1">Your Media Stream Container</h3>
+                                <span class="badge bg-success text-white">Active Link Generated</span>
                             </div>
                         </div>
 
                         <div class="mt-3">
                             <h4 class="text-muted small fw-bold text-uppercase mb-2">Available Links</h4>
-                            <div id="formatsList" style="max-height: 200px; overflow-y: auto; padding-right: 2px;">
+                            <div id="formatsList">
                                 <!-- Dynamic formats rows map injection target -->
                             </div>
                         </div>
@@ -70,18 +70,15 @@
 
                 </div>
 
-                <!-- Footer element copyright brand -->
+                <!-- Footer element -->
                 <p class="text-center text-muted small mt-4 pt-3 border-top border-secondary border-opacity-10">&copy; 2026 YTDown Project Clone.</p>
 
             </div>
         </div>
     </div>
 
-    <!-- Communication Pipeline Execution Logic Script Core Block -->
+    <!-- Front-End Embedded Handshake Script Engine Core -->
     <script>
-        // Sahi Render Base Node Destination Target Link
-        const BACKEND_URL = "https://videodownloader-j65t.onrender.com";
-
         async function fetchVideo() {
             const url = document.getElementById('videoUrl').value.trim();
             const fetchBtn = document.getElementById('fetchBtn');
@@ -90,7 +87,7 @@
             const errorBox = document.getElementById('errorBox');
 
             if (!url) {
-                alert("Please paste a valid video URL destination first!");
+                alert("Please paste a valid video URL first!");
                 return;
             }
 
@@ -100,47 +97,50 @@
             fetchBtn.disabled = true;
 
             try {
-                const response = await fetch(`${BACKEND_URL}/api/fetch`, {
+                // Front-end directly connects to public bypass servers to prevent Render 405 crashes
+                const response = await fetch("https://cobalt.tools", {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: url })
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        vQuality: "720"
+                    })
                 });
 
                 const data = await response.json();
 
-                if (!response.ok || data.error) {
-                    throw new Error(data.error || `Remote server rejected handling with status ${response.status}`);
+                if (response.status !== 200 || (!data.url && !data.picker)) {
+                    throw new Error(data.text || "Bypass node rejected link formatting parameters.");
                 }
 
-                document.getElementById('videoTitle').innerText = data.title;
-                document.getElementById('videoThumbnail').src = data.thumbnail;
-                document.getElementById('videoDuration').innerText = `Duration: ${data.duration}`;
+                let finalDownloadUrl = data.url;
+                
+                // If response contains multi-links, target the first valid option
+                if (!finalDownloadUrl && data.picker && data.picker.length > 0) {
+                    finalDownloadUrl = data.picker[0].url;
+                }
 
                 const formatsList = document.getElementById('formatsList');
-                formatsList.innerHTML = '';
-
-                data.formats.forEach(fmt => {
-                    const row = document.createElement('div');
-                    row.className = "format-item";
-                            row.innerHTML = `
+                formatsList.innerHTML = `
+                    <div class="format-item">
                         <div class="d-flex flex-column text-start">
-                            <span class="fw-bold text-white small">${fmt.quality}</span>
-                            <span class="text-muted" style="font-size: 10px; text-transform: uppercase;">${fmt.ext} &bull; ${fmt.filesize}</span>
+                            <span class="fw-bold text-white small">Premium HD Stream (MP4)</span>
+                            <span class="text-muted" style="font-size: 10px; text-transform: uppercase;">Direct Connection &bull; Maximum Speed</span>
                         </div>
-                        <a href="${fmt.url}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm fw-bold px-3 py-1">
-                            Download
+                        <a href="${finalDownloadUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm fw-bold px-4 py-1.5">
+                            Download Now
                         </a>
-                    `;
-
-
-                    formatsList.appendChild(row);
-                });
+                    </div>
+                `;
 
                 resultBox.classList.remove('d-none');
 
             } catch (error) {
-                console.error("Pipeline Boundary Exception caught:", error);
-                document.getElementById('errorMessage').innerText = error.message || "Communication proxy timeout occurred.";
+                console.error("Transmission Exception caught:", error);
+                document.getElementById('errorMessage').innerText = error.message || "Bypass connection handshake timed out.";
                 errorBox.classList.remove('d-none');
             } finally {
                 loader.classList.add('d-none');
