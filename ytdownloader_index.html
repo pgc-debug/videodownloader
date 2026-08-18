@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YTDown - YouTube Video Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen items-center justify-between p-4">
+    
+    <!-- Navbar -->
+    <header class="w-full max-w-4xl flex justify-between items-center py-4 border-b border-slate-800">
+        <h1 class="text-2xl font-bold text-red-500 flex items-center gap-1">
+            <span>🔴</span> YTDown
+        </h1>
+        <span class="text-sm text-slate-400">Free Video Downloader</span>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl my-auto">
+        <div class="text-center mb-6">
+            <h2 class="text-3xl font-extrabold mb-2">Download YouTube Videos</h2>
+            <p class="text-slate-400">Convert and download YouTube videos in MP4 or MP3 high quality formats instantly.</p>
+        </div>
+
+        <!-- Input Box -->
+        <div class="flex flex-col sm:flex-row gap-2 mb-6">
+            <input id="videoUrl" type="text" placeholder="Paste YouTube video link here..." 
+                class="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-red-500 text-white placeholder-slate-500">
+            <button id="fetchBtn" onclick="fetchVideo()" 
+                class="bg-red-600 hover:bg-red-700 transition px-6 py-3 font-bold rounded-xl text-white">
+                Fetch Links
+            </button>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loader" class="hidden text-center py-6">
+            <div class="animate-spin inline-block w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full mb-2"></div>
+            <p class="text-slate-400">Processing video formats... Please wait.</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorBox" class="hidden bg-red-900/50 border border-red-500 text-red-200 p-4 rounded-xl mb-6 text-center"></div>
+
+        <!-- Result Box -->
+        <div id="resultBox" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row gap-4 border-b border-slate-800 pb-4">
+                <img id="videoThumb" src="" alt="Thumbnail" class="w-full md:w-48 h-auto object-cover rounded-xl border border-slate-700">
+                <div>
+                    <h3 id="videoTitle" class="text-lg font-bold leading-snug"></h3>
+                    <p id="videoDuration" class="text-sm text-slate-400 mt-1"></p>
+                </div>
+            </div>
+
+            <!-- Formats List -->
+            <div>
+                <h4 class="text-md font-bold mb-3 text-slate-300">Available Formats:</h4>
+                <div id="formatsList" class="max-h-60 overflow-y-auto space-y-2 pr-2">
+                    <!-- Dynamic Rows Go Here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-4xl text-center py-4 border-t border-slate-800 text-xs text-slate-500">
+        &copy; 2026 YTDown Clone. For educational purposes only.
+    </footer>
+
+    <script>
+        // Change this URL to your deployed Render URL later (e.g., https://your-app.onrender.com)
+        const BACKEND_URL = "http://127.0.0.1:5000";
+
+        async function fetchVideo() {
+            const url = document.getElementById('videoUrl').value.trim();
+            const fetchBtn = document.getElementById('fetchBtn');
+            const loader = document.getElementById('loader');
+            const resultBox = document.getElementById('resultBox');
+            const errorBox = document.getElementById('errorBox');
+
+            if (!url) {
+                alert("Please paste a valid URL first!");
+                return;
+            }
+
+            // UI Reset
+            errorBox.classList.add('hidden');
+            resultBox.classList.add('hidden');
+            loader.classList.remove('hidden');
+            fetchBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/info`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || data.error) {
+                    throw new Error(data.error || "Failed to fetch media data.");
+                }
+
+                // Render Details
+                document.getElementById('videoThumb').src = data.thumbnail;
+                document.getElementById('videoTitle').innerText = data.title;
+                document.getElementById('videoDuration').innerText = `Duration: ${Math.floor(data.duration / 60)}m ${data.duration % 60}s`;
+
+                // Render Download Rows
+                const list = document.getElementById('formatsList');
+                list.innerHTML = '';
+
+                data.formats.forEach(f => {
+                    const sizeMB = f.filesize !== 'Unknown' ? (f.filesize / (1024 * 1024)).toFixed(1) + ' MB' : 'Stream';
+                    const row = document.createElement('div');
+                    row.className = "flex justify-between items-center bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 p-3 rounded-xl transition";
+                    row.innerHTML = `
+                        <div>
+                            <span class="font-semibold text-white bg-slate-700 px-2 py-0.5 rounded text-xs uppercase mr-2">${f.ext}</span>
+                            <span class="text-sm font-medium text-slate-200">${f.resolution}</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs text-slate-400">${sizeMB}</span>
+                            <a href="${f.download_url}" target="_blank" rel="noopener noreferrer"
+                               class="bg-green-600 hover:bg-green-700 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition">
+                               Download
+                            </a>
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+
+                resultBox.classList.remove('hidden');
+            } catch (err) {
+                errorBox.innerText = err.message;
+                errorBox.classList.remove('hidden');
+            } finally {
+                loader.classList.add('hidden');
+                fetchBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
