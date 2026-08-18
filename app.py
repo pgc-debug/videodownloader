@@ -68,6 +68,33 @@ def fetch_video():
     except Exception as e:
         return jsonify({"error": f"Failed to parse video: {str(e)}"}), 500
 
+@app.route('/api/download', methods=['GET'])
+def download_proxy():
+    video_url = request.args.get('url')
+    if not video_url:
+        return "Missing video stream URL", 400
+        
+    import requests
+    from flask import Response
+    
+    try:
+        # Render server video ko piche se stream karega
+        req = requests.get(video_url, stream=True, headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        })
+        
+        # Browser ko batayen ge ki yeh ek file download hai
+        headers = {
+            'Content-Type': req.headers.get('Content-Type', 'video/mp4'),
+            'Content-Disposition': 'attachment; filename="video.mp4"'
+        }
+        
+        return Response(req.iter_content(chunk_size=1024*1024), headers=headers)
+        
+    except Exception as e:
+        return f"Proxy download failed: {str(e)}", 500
+
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
