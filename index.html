@@ -122,13 +122,14 @@
                 data.formats.forEach(fmt => {
                     const row = document.createElement('div');
                     row.className = "format-item";
-                    row.innerHTML = `
+                                       row.innerHTML = `
                         <div class="d-flex flex-column text-start">
                             <span class="fw-bold text-white small">${fmt.quality}</span>
                             <span class="text-muted" style="font-size: 10px; text-transform: uppercase;">${fmt.ext} &bull; ${fmt.filesize}</span>
                         </div>
-                       <a href="${BACKEND_URL}/api/download?url=${encodeURIComponent(fmt.url)}" download target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm fw-bold px-3 py-1">
-
+                        <a href="${BACKEND_URL}/api/download?url=${encodeURIComponent(fmt.url)}" download target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm fw-bold px-3 py-1">
+                            Download
+                        </a>
                     `;
                     formatsList.appendChild(row);
                 });
