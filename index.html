@@ -71,78 +71,81 @@
     </footer>
 
     <script>
-        // Change this URL to your deployed Render URL later (e.g., https://your-app.onrender.com)
-        const BACKEND_URL = "https://flashvid.onrender.com"; // (Aapka apna Render link)
+    // Aapka live Render URL bina kisi aakhri slash ke
+    const BACKEND_URL = "https://flashvid.onrender.com";
 
-        async function fetchVideo() {
-            const url = document.getElementById('videoUrl').value.trim();
-            const fetchBtn = document.getElementById('fetchBtn');
-            const loader = document.getElementById('loader');
-            const resultBox = document.getElementById('resultBox');
-            const errorBox = document.getElementById('errorBox');
+    async function fetchVideo() {
+        const url = document.getElementById('videoUrl').value.trim();
+        const fetchBtn = document.getElementById('fetchBtn');
+        const loader = document.getElementById('loader');
+        const resultBox = document.getElementById('resultBox');
+        const errorBox = document.getElementById('errorBox');
 
-            if (!url) {
-                alert("Please paste a valid URL first!");
-                return;
-            }
-
-            // UI Reset
-            errorBox.classList.add('hidden');
-            resultBox.classList.add('hidden');
-            loader.classList.remove('hidden');
-            fetchBtn.disabled = true;
-
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/info`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: url })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok || data.error) {
-                    throw new Error(data.error || "Failed to fetch media data.");
-                }
-
-                // Render Details
-                document.getElementById('videoThumb').src = data.thumbnail;
-                document.getElementById('videoTitle').innerText = data.title;
-                document.getElementById('videoDuration').innerText = `Duration: ${Math.floor(data.duration / 60)}m ${data.duration % 60}s`;
-
-                // Render Download Rows
-                const list = document.getElementById('formatsList');
-                list.innerHTML = '';
-
-                data.formats.forEach(f => {
-                    const sizeMB = f.filesize !== 'Unknown' ? (f.filesize / (1024 * 1024)).toFixed(1) + ' MB' : 'Stream';
-                    const row = document.createElement('div');
-                    row.className = "flex justify-between items-center bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 p-3 rounded-xl transition";
-                    row.innerHTML = `
-                        <div>
-                            <span class="font-semibold text-white bg-slate-700 px-2 py-0.5 rounded text-xs uppercase mr-2">${f.ext}</span>
-                            <span class="text-sm font-medium text-slate-200">${f.resolution}</span>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <span class="text-xs text-slate-400">${sizeMB}</span>
-                            <a href="${f.download_url}" target="_blank" rel="noopener noreferrer"
-                               class="bg-green-600 hover:bg-green-700 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition">
-                               Download
-                            </a>
-                        </div>
-                    `;
-                    list.appendChild(row);
-                });
-
-                resultBox.classList.remove('hidden');
-            } catch (err) {
-                errorBox.innerText = err.message;
-                errorBox.classList.remove('hidden');
-            } finally {
-                loader.classList.add('hidden');
-                fetchBtn.disabled = false;
-            }
+        if (!url) {
+            alert("Please paste a valid YouTube URL first!");
+            return;
         }
-    </script>
+
+        // Setup UI for loading state
+        errorBox.classList.add('hidden');
+        resultBox.classList.add('hidden');
+        loader.classList.remove('hidden');
+        fetchBtn.disabled = true;
+
+        try {
+            // Hamara backend custom endpoint use karta hai, isiliye direct /api/fetch format lazmi hai
+            const response = await fetch(`${BACKEND_URL}/api/fetch`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: url })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || data.error) {
+                throw new Error(data.error || `Server responded with status ${response.status}`);
+            }
+
+            // Render Card Data
+            document.getElementById('videoTitle').innerText = data.title;
+            document.getElementById('videoThumbnail').src = data.thumbnail;
+            document.getElementById('videoDuration').innerText = `Duration: ${data.duration}`;
+
+            // Populate Download Formats
+            const formatsList = document.getElementById('formatsList');
+            formatsList.innerHTML = '';
+
+            data.formats.forEach(fmt => {
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center bg-slate-700 p-3 rounded-lg border border-slate-600";
+                li.innerHTML = `
+                    <div>
+                        <span class="font-semibold text-white">${fmt.quality}</span>
+                        <span class="text-xs text-slate-400 block">${fmt.ext.toUpperCase()} ${fmt.filesize ? '• ' + fmt.filesize : ''}</span>
+                    </div>
+                    <a href="${fmt.url}" target="_blank" rel="noopener noreferrer" class="bg-green-600 hover:bg-green-500 text-white font-medium px-4 py-1.5 rounded transition text-sm">
+                        Download
+                    </a>
+                `;
+                formatsList.appendChild(li);
+            });
+
+            // Show Results
+            resultBox.classList.remove('hidden');
+
+        } catch (error) {
+            console.error("Error fetching video:", error);
+            document.getElementById('errorMessage').innerText = error.message || "An unexpected network error occurred.";
+            errorBox.classList.remove('hidden');
+        } finally {
+            loader.classList.add('hidden');
+            fetchBtn.disabled = false;
+        }
+    }
+</script>
+
+   
 </body>
 </html>
