@@ -98,7 +98,8 @@
 
             try {
                 // Front-end directly connects to public bypass servers to prevent Render 405 crashes
-                const response = await fetch("https://cobalt.tools", {
+                                // Public CORS bypass server integration to crack browser locks
+                const response = await fetch("https://corsproxy.io?" + encodeURIComponent("https://cobalt.tools"), {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -109,6 +110,7 @@
                         vQuality: "720"
                     })
                 });
+
 
                 const data = await response.json();
 
